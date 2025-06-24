@@ -23,6 +23,10 @@ class Game {
     this.player1.createShips();
     this.player2.createShips();
   }
+
+  getPlayers() {
+    return [this.player1, this.player2];
+  }
 }
 
 export default Game;

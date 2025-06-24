@@ -1,0 +1,166 @@
+:root {
+  --cell-height: 1.5rem;
+  --cell-width: 1.5rem;
+  --MISS-color: rgb(248, 246, 126);
+  --SHIP-color: rgb(69, 65, 65);
+}
+/* Josh Comeau CSS reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    interpolate-size: allow-keywords;
+  }
+}
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+p {
+  text-wrap: pretty;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+
+#root,
+#__next {
+  isolation: isolate;
+}
+
+html,
+body {
+  height: 100dvb;
+  display: grid;
+  grid-template-rows: 100px 1fr 100px;
+}
+
+body {
+  padding: 0.5rem;
+}
+
+main#battlefields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: center;
+  align-items: center;
+}
+
+.battlefield {
+  position: relative;
+  width: calc(25rem + 10px);
+  height: 20rem;
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  grid-template-columns: min-content 1fr;
+  grid-template-areas:
+    ". row-index"
+    "column-index table-battlefield";
+  column-gap: 10px;
+}
+
+.battlefield-placeholder {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(240, 248, 255, 0.639);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.battlefield-placeholder button {
+  &:hover {
+    cursor: pointer;
+  }
+}
+.table-row-index {
+  grid-area: row-index;
+  display: flex;
+  justify-content: space-between;
+}
+
+.table-column-index {
+  grid-area: column-index;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.table-row-index div,
+.table-column-index div {
+  height: var(--cell-height, 1em);
+  width: var(--cell-width, 1em);
+  text-align: center;
+}
+
+table.battlefield-table {
+  grid-area: table-battlefield;
+  text-align: center;
+}
+table,
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+td {
+  padding: 0px;
+  height: var(--cell-height);
+  width: var(--cell-width);
+}
+
+.table-cell,
+.ship {
+  width: 100%;
+  height: 100%;
+  .table-cell&:hover {
+    background-color: var(--MISS-color, (248, 246, 126));
+    cursor: pointer;
+  }
+}
+
+.ship {
+  background-color: var(--SHIP-color, black);
+}

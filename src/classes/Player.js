@@ -28,6 +28,10 @@ class Player {
     return this.ships;
   }
 
+  getBoards() {
+    return [this.gameboard.getOwnGrid(), this.gameboard.getTrackingGrid()];
+  }
+
   placeShip(coords, ship, orientation) {
     this.gameboard.ownGrid.placeShip(coords, ship, orientation);
   }
