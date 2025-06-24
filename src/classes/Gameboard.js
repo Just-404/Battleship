@@ -6,7 +6,7 @@ const MISS = 0;
 class Gameboard {
   constructor() {
     this.ownGrid = this.#createGrid();
-    // cell values: MISS or HIT.
+    // cell values: null, MISS, HIT or Ship.
     this.trackingGrid = this.#createGrid();
     this.shipsSunk = 0;
   }

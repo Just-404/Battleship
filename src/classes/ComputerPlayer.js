@@ -9,7 +9,8 @@ class ComputerPlayer extends Player {
   #generateKey(x, y) {
     return `${x}-${y}`;
   }
-  generateCoords() {
+
+  generateAttackingCoords() {
     while (true) {
       const x = Math.floor(Math.random() * 10);
       const y = Math.floor(Math.random() * 10);

@@ -1,2 +1,3 @@
-# Template-Repository
-A template repository for webpack
+# Battleship
+
+Implementation for the game Battleship
