@@ -24,7 +24,7 @@ class ComputerPlayer extends Player {
   }
 
   attackShipOn() {
-    return this.generateCoords();
+    return this.generateAttackingCoords();
   }
 }
 

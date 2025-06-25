@@ -83,6 +83,7 @@ class Gameboard {
     } else {
       this.trackingGrid[x][y] = MISS;
     }
+    return this.trackingGrid[x][y];
   }
 }
 export default Gameboard;

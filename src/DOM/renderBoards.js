@@ -1,29 +1,91 @@
 import Ship from "../classes/Ship";
 
-const renderInitialBoards = (ownBoard) => {
-  const boards = document.querySelectorAll(".battlefield-table");
+const BOARDS = document.querySelectorAll(".battlefield-table");
+const PLACEHOLDER_BOARD = document.querySelectorAll(".battlefield-placeholder");
 
-  boards.forEach((board, boardIdx) => {
-    ownBoard.forEach((row, i) => {
-      const tr = document.createElement("tr");
+let disabledBoard = 1;
 
-      for (let j = 0; j < row.length; j++) {
-        const td = document.createElement("td");
-        const cell = document.createElement("div");
-        cell.dataset.x = i;
-        cell.dataset.y = j;
+const renderInitialBoard = (ownBoard) => {
+  const OWN_BOARD = BOARDS[0];
+  PLACEHOLDER_BOARD[0].style.display = "none";
+  ownBoard.forEach((row, i) => {
+    const tr = document.createElement("tr");
 
-        let className = "table-cell";
-        if (row[j] instanceof Ship && boardIdx !== 1) className = "ship";
+    for (let j = 0; j < row.length; j++) {
+      const td = document.createElement("td");
+      const cell = document.createElement("div");
+      cell.dataset.x = i;
+      cell.dataset.y = j;
 
-        cell.classList.add(className);
-        td.appendChild(cell);
-        tr.appendChild(td);
-      }
+      let className = "table-cell";
+      if (row[j] instanceof Ship) className = "ship";
 
-      board.appendChild(tr);
-    });
+      cell.classList.add(className);
+      td.appendChild(cell);
+      tr.appendChild(td);
+    }
+    OWN_BOARD.style.pointerEvents = "none";
+    OWN_BOARD.appendChild(tr);
   });
 };
 
-export { renderInitialBoards };
+const attackCell = (event, attackCb) => {
+  const xCoord = event.currentTarget.dataset.x;
+  const yCoord = event.currentTarget.dataset.y;
+
+  const cellAttackValue = attackCb(xCoord, yCoord);
+  const cellClassName = cellAttackValue === 0 ? "cell-miss" : "cell-hit";
+
+  event.currentTarget.classList.add(cellClassName);
+  event.currentTarget.style.pointerEvents = "none";
+};
+
+const computerAttackCell = (x, y, value) => {
+  const cellClassName = value === 0 ? "cell-miss" : "cell-hit";
+  const cell = document.querySelector(
+    `.battlefield-own .battlefield-table tr div[data-x = "${x}"][data-y="${y}"]`
+  );
+  cell.classList.add(cellClassName);
+};
+
+const renderRivalBoard = (rivalBoard, attackCb) => {
+  const RIVAL_BOARD = BOARDS[1];
+
+  rivalBoard.forEach((row, i) => {
+    const tr = document.createElement("tr");
+
+    for (let j = 0; j < row.length; j++) {
+      const td = document.createElement("td");
+      const cell = document.createElement("div");
+      cell.dataset.x = i;
+      cell.dataset.y = j;
+
+      cell.addEventListener("click", (e) => attackCell(e, attackCb));
+      let className = "table-cell";
+      cell.classList.add(className);
+      td.appendChild(cell);
+      tr.appendChild(td);
+    }
+
+    RIVAL_BOARD.appendChild(tr);
+  });
+
+  changeBoards();
+  const playBtn = document.getElementById("play-btn");
+  playBtn.style.display = "none";
+};
+
+const changeBoards = () => {
+  const board = PLACEHOLDER_BOARD[disabledBoard];
+  board.style.display = "none";
+  disabledBoard = disabledBoard === 1 ? 0 : 1;
+
+  PLACEHOLDER_BOARD[disabledBoard].style.display = "flex";
+};
+
+export {
+  renderInitialBoard,
+  renderRivalBoard,
+  changeBoards,
+  computerAttackCell,
+};

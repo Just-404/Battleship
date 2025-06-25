@@ -1,27 +1,82 @@
-import Ship from "./Ship";
-import Gameboard from "./Gameboard";
 import Player from "./Player";
 import ComputerPlayer from "./ComputerPlayer";
+import {
+  renderInitialBoard,
+  renderRivalBoard,
+  changeBoards,
+  computerAttackCell,
+} from "../DOM/renderBoards";
+const OUTPUT = document.getElementsByTagName("output")[0];
 
 class Game {
   constructor(player1Name = "Player 1", player2Name = "Computer") {
     this.player1 = new Player(player1Name);
     this.player2 = new ComputerPlayer(player2Name);
-    this.playerTurn = this.player1;
+    this.attacker = this.player1;
+    this.defensor = this.player2;
   }
 
   changeTurn() {
-    this.playerTurn =
-      this.playerTurn === this.player1 ? this.player2 : this.player2;
+    this.attacker =
+      this.attacker === this.player1 ? this.player2 : this.player1;
+
+    this.defensor =
+      this.defensor === this.player1 ? this.player2 : this.player1;
+    if (this.attacker instanceof ComputerPlayer) {
+      this.computerTurn();
+    }
+    changeBoards();
+  }
+
+  computerTurn() {
+    setTimeout(() => {
+      if (this.defensor instanceof ComputerPlayer) return;
+      const [x, y] = this.attacker.attackShipOn();
+      const cellValue = this.defensor.receiveAttack(x, y);
+
+      if (cellValue == 0) this.changeTurn();
+      computerAttackCell(x, y, cellValue);
+
+      this.computerTurn();
+    }, 700);
   }
 
   placeShip(coords, ship, orientation) {
-    this.playerTurn.placeShip(coords, ship, orientation);
+    this.attacker.placeShip(coords, ship, orientation);
   }
 
   startGame() {
     this.player1.createShips();
     this.player2.createShips();
+
+    renderInitialBoard(this.player1.gameboard.getOwnGrid());
+  }
+
+  attackCell(x, y) {
+    try {
+      const cellValue = this.defensor.receiveAttack(x, y);
+
+      if (cellValue === 0) {
+        OUTPUT.textContent = `${this.attacker.name} has missed!`;
+        this.changeTurn();
+      } else if (cellValue === 1) {
+        OUTPUT.textContent = `${this.attacker.name} has hit a ship!`;
+      }
+
+      return cellValue;
+    } catch (error) {
+      OUTPUT.textContent = error.message;
+      return null;
+    }
+  }
+
+  startRound() {
+    OUTPUT.value = "It's " + this.attacker.name + " turn.";
+
+    renderRivalBoard(
+      this.defensor.gameboard.getOwnGrid(),
+      this.attackCell.bind(this)
+    );
   }
 
   getPlayers() {

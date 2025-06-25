@@ -37,7 +37,7 @@ class Player {
   }
 
   receiveAttack(x, y) {
-    this.gameboard.receiveAttack(x, y);
+    return this.gameboard.receiveAttack(x, y);
   }
 }
 
