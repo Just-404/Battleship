@@ -11,6 +11,11 @@ class Gameboard {
     this.shipsSunk = 0;
   }
 
+  resetBoard() {
+    this.trackingGrid = this.#createGrid();
+    this.shipsSunk = 0;
+  }
+
   #createGrid() {
     const grid = [];
 

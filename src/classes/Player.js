@@ -5,10 +5,11 @@ class Player {
   constructor(name) {
     this.name = name;
     this.gameboard = new Gameboard();
-    this.ships = [];
+    this.ships = this.createShips();
   }
 
   createShips() {
+    const ships = [];
     const SHIPS = [
       { name: "Destroyer", length: 2, defaultStartingCoords: [0, 0] },
       { name: "Submarien", length: 2, defaultStartingCoords: [1, 1] },
@@ -19,9 +20,17 @@ class Player {
 
     for (const ship of SHIPS) {
       const newShip = new Ship(ship.name, ship.length);
-      this.ships.push(newShip);
+      ships.push(newShip);
       this.gameboard.placeShip(ship.defaultStartingCoords, newShip, 0);
     }
+
+    return ships;
+  }
+
+  fixShips() {
+    this.ships.forEach((ship) => {
+      ship.fixShip();
+    });
   }
 
   getShips() {
@@ -38,6 +47,11 @@ class Player {
 
   receiveAttack(x, y) {
     return this.gameboard.receiveAttack(x, y);
+  }
+
+  resetBoard() {
+    this.gameboard.resetBoard();
+    this.fixShips();
   }
 }
 

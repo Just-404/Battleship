@@ -6,6 +6,11 @@ class ComputerPlayer extends Player {
     this.playedCells = new Set();
   }
 
+  resetBoard() {
+    super.resetBoard();
+    this.playedCells.clear();
+  }
+
   #generateKey(x, y) {
     return `${x}-${y}`;
   }

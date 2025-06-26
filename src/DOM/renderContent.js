@@ -83,9 +83,33 @@ const changeBoards = () => {
   PLACEHOLDER_BOARD[disabledBoard].style.display = "flex";
 };
 
+const resetGame = (startGameCb) => {
+  disabledBoard = 1;
+  BOARDS[0].replaceChildren();
+  BOARDS[1].replaceChildren();
+
+  PLACEHOLDER_BOARD[disabledBoard].style.display = "flex";
+  const playBtn = document.getElementById("play-btn");
+  playBtn.style.display = "block";
+
+  startGameCb();
+};
+
+const renderEndScreen = (startGameCb) => {
+  const dialog = document.getElementById("end-screen");
+  dialog.showModal();
+
+  const retryBtn = document.querySelector("#end-screen form button");
+
+  retryBtn.addEventListener("click", () => resetGame(startGameCb), {
+    once: true,
+  });
+};
+
 export {
   renderInitialBoard,
   renderRivalBoard,
   changeBoards,
   computerAttackCell,
+  renderEndScreen,
 };

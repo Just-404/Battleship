@@ -11,6 +11,11 @@ class Ship {
     this.positions = coords;
   }
 
+  fixShip() {
+    this.hitsCount = 0;
+    this.sunk = false;
+  }
+
   isSunk() {
     return this.sunk;
   }
