@@ -122,8 +122,10 @@ main#battlefields {
   width: 80rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr min-content;
   justify-items: center;
-  align-content: center;
+  align-items: center;
+  padding-bottom: 1rem;
 }
 
 .battlefield {

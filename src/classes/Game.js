@@ -20,11 +20,12 @@ class Game {
 
   endGame() {
     OUTPUT.value = this.attacker.name + " wins!";
-    renderEndScreen(this.startGame.bind(this));
     this.player1.resetBoard();
     this.player2.resetBoard();
     this.attacker = this.player1;
     this.defensor = this.player2;
+
+    renderEndScreen(this.placeShipsRandomly.bind(this));
   }
 
   changeTurn() {
@@ -44,15 +45,14 @@ class Game {
       if (this.defensor instanceof ComputerPlayer) return;
       const [x, y] = this.attacker.attackShipOn();
       const cellValue = this.defensor.receiveAttack(x, y);
-
-      if (cellValue == 0) this.changeTurn();
       computerAttackCell(x, y, cellValue); // updates the UI
 
       if (this.defensor.gameboard.isGameover()) {
         this.endGame();
         return;
       }
-      this.computerTurn();
+      if (cellValue === 0) this.changeTurn();
+      else this.computerTurn();
     }, 600);
   }
 
@@ -60,7 +60,12 @@ class Game {
     this.attacker.placeShip(coords, ship, orientation);
   }
 
-  startGame() {
+  placeShipsRandomly() {
+    this.player1.placeShipsRandomly();
+    this.initOwnBoard();
+  }
+
+  initOwnBoard() {
     renderInitialBoard(this.player1.gameboard.getOwnGrid());
   }
 
@@ -86,6 +91,8 @@ class Game {
 
   startRound() {
     OUTPUT.value = "It's " + this.attacker.name + " turn.";
+    if (this.defensor instanceof ComputerPlayer)
+      this.defensor.placeShipsRandomly();
 
     renderRivalBoard(
       this.defensor.gameboard.getOwnGrid(),

@@ -7,6 +7,7 @@ let disabledBoard = 1;
 
 const renderInitialBoard = (ownBoard) => {
   const OWN_BOARD = BOARDS[0];
+  OWN_BOARD.replaceChildren();
   PLACEHOLDER_BOARD[0].style.display = "none";
   ownBoard.forEach((row, i) => {
     const tr = document.createElement("tr");

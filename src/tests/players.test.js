@@ -26,7 +26,6 @@ test("ComputerPlayer generates random unique attacks", () => {
 
 test("Ships are created correctly", () => {
   const player = new Player("Joe");
-  player.createShips();
   expect(player.ships.length).toBe(5);
   expect(player.ships[0].name).toBe("Destroyer");
   expect(player.ships[4].length).toBe(5);
