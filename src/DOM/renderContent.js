@@ -74,6 +74,8 @@ const renderRivalBoard = (rivalBoard, attackCb) => {
   changeBoards();
   const playBtn = document.getElementById("play-btn");
   playBtn.style.display = "none";
+  const randomBtn = document.getElementById("randomise");
+  randomBtn.disabled = true;
 };
 
 const changeBoards = () => {
@@ -92,7 +94,8 @@ const resetGame = (startGameCb) => {
   PLACEHOLDER_BOARD[disabledBoard].style.display = "flex";
   const playBtn = document.getElementById("play-btn");
   playBtn.style.display = "block";
-
+  const randomBtn = document.getElementById("randomise");
+  randomBtn.disabled = false;
   startGameCb();
 };
 
