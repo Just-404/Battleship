@@ -13,4 +13,12 @@
   text-align: center;
   border: 1px solid white;
   z-index: 10;
+  display: flex;
+  justify-content: center;
+}
+
+.placed-ship.vertical .ship-content {
+  font-size: 12px;
+  writing-mode: vertical-rl;
+  user-select: none;
 }

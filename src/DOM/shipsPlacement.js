@@ -44,7 +44,11 @@ const addShipInDock = (ship) => {
   newShip.draggable = true;
   newShip.dataset.name = ship.name;
   newShip.dataset.length = ship.length;
-  newShip.textContent = ship.name;
+
+  const content = document.createElement("span");
+  content.classList.add("ship-content");
+  content.textContent = ship.name;
+  newShip.appendChild(content);
 
   newShip.style.width = `calc(var(--cell-width) * ${ship.length})`;
   dock.appendChild(newShip);
@@ -102,8 +106,10 @@ const rotateShip = (ship, cellWidth, cellHeight, shipLength, firstCell) => {
   const orientation = ship.dataset.orientation == 1 ? 0 : 1;
   ship.dataset.orientation = orientation;
   if (orientation === 0) {
+    ship.classList.add("vertical");
     placeShipVertically(ship, cellWidth, cellHeight, shipLength, firstCell);
   } else {
+    ship.classList.remove("vertical");
     placeShipHorizontally(ship, cellWidth, cellHeight, shipLength, firstCell);
   }
 };
