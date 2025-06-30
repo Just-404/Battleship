@@ -1,14 +1,27 @@
 class Ship {
-  constructor(name, length) {
+  constructor(name, length, orientation = 1) {
     this.name = name;
     this.length = length;
     this.hitsCount = 0;
     this.sunk = false;
     this.positions = [];
+    this.orientation = orientation;
   }
 
   setPositions(coords) {
     this.positions = coords;
+  }
+
+  getPositions() {
+    return this.positions;
+  }
+
+  getOrientation() {
+    return this.orientation;
+  }
+
+  toggleOrientation() {
+    this.orientation = this.orientation === 1 ? 0 : 1;
   }
 
   fixShip() {

@@ -7,6 +7,12 @@ import {
   computerAttackCell,
   renderEndScreen,
 } from "../DOM/renderContent.js";
+import {
+  addShipInDock,
+  dragShips,
+  dropShips,
+  openDock,
+} from "../DOM/shipsPlacement.js";
 
 const OUTPUT = document.getElementsByTagName("output")[0];
 
@@ -57,7 +63,11 @@ class Game {
   }
 
   placeShip(coords, ship, orientation) {
-    this.attacker.placeShip(coords, ship, orientation);
+    this.attacker.placeShipsManually(coords, ship, orientation);
+  }
+
+  rotateShip(ship) {
+    this.attacker.rotateShip(ship);
   }
 
   placeShipsRandomly() {
@@ -65,8 +75,16 @@ class Game {
     this.initOwnBoard();
   }
 
-  initOwnBoard() {
-    renderInitialBoard(this.player1.gameboard.getOwnGrid());
+  placeShipsManually() {
+    this.attacker.resetBoard();
+    this.initOwnBoard();
+    this.initDock();
+    dragShips();
+    dropShips(
+      this.attacker.placeShip.bind(this.attacker),
+      this.initOwnBoard.bind(this),
+      this.rotateShip.bind(this)
+    );
   }
 
   attackCell(x, y) {
@@ -99,7 +117,20 @@ class Game {
       this.attackCell.bind(this)
     );
   }
+  initDock() {
+    const ships = this.attacker.getShips();
+    ships.forEach((ship) => {
+      addShipInDock(ship);
+    });
+    openDock();
+  }
+  initGame() {
+    this.initOwnBoard();
+  }
 
+  initOwnBoard() {
+    renderInitialBoard(this.player1.gameboard.getOwnGrid());
+  }
   getPlayers() {
     return [this.player1, this.player2];
   }

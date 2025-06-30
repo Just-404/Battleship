@@ -69,3 +69,18 @@ test("isGameover returns true after sinking 5 ships", () => {
   }
   expect(gameboard.isGameover()).toBe(true);
 });
+
+test("rotate ship", () => {
+  const gameboard = new Gameboard();
+  const ship = new Ship("Cruiser", 2);
+  gameboard.placeShipManually([0, 0], ship, 1);
+
+  for (let i = 0; i < 2; i++) {
+    expect(gameboard.getOwnGrid()[0][i]).toBe(ship);
+  }
+
+  gameboard.rotateShip(ship);
+  for (let i = 0; i < 2; i++) {
+    expect(gameboard.getOwnGrid()[i][0]).toBe(ship);
+  }
+});

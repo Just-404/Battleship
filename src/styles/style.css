@@ -1,6 +1,6 @@
 :root {
   --cell-height: 1.5rem;
-  --cell-width: 1.5rem;
+  --cell-width: 2.5rem;
   --MISS-color: rgb(248, 246, 126);
   --SHIP-color: rgb(69, 65, 65);
   --HIT-color: rgb(244, 68, 68);
@@ -73,13 +73,13 @@ h6 {
 html,
 body {
   height: 100dvb;
-  display: grid;
-  grid-template-rows: 60px 1fr 100px;
-  justify-content: center;
 }
 
 body {
   padding: 0.5rem;
+  display: grid;
+  grid-template-rows: 60px 1fr 100px;
+  justify-content: center;
 }
 
 dialog#end-screen {
@@ -121,16 +121,43 @@ header output {
 main#battlefields {
   width: 80rem;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   grid-template-rows: 1fr min-content;
   justify-items: center;
   align-items: center;
   padding-bottom: 1rem;
 }
+.battlefield-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.battlefield-wrapper.only-own {
+  justify-content: center;
+}
+.dock {
+  padding: 5px;
+  position: fixed;
+  left: 0;
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background-color: rgb(235, 235, 235);
+  height: 20rem;
+  width: var(--cell-width * 5);
+  z-index: 10;
+}
+.drag-hover {
+  background-color: rgba(0, 255, 0, 0.2);
+}
 
 .battlefield {
   position: relative;
-  width: calc(25rem + 10px);
+  width: calc(25rem + 50px);
   height: 20rem;
   display: grid;
   grid-template-rows: min-content 1fr;
@@ -149,6 +176,7 @@ main#battlefields {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 }
 
 .battlefield-placeholder button {
@@ -194,6 +222,7 @@ td {
 }
 
 td {
+  position: relative;
   padding: 0px;
   height: var(--cell-height);
   width: var(--cell-width);
@@ -209,6 +238,10 @@ td {
   }
 }
 
+.battlefield-own .table-cell:hover {
+  background-color: inherit;
+  cursor: default;
+}
 .ship {
   background-color: var(--SHIP-color, black);
 }

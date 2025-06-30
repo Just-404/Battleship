@@ -25,7 +25,7 @@ const renderInitialBoard = (ownBoard) => {
       td.appendChild(cell);
       tr.appendChild(td);
     }
-    OWN_BOARD.style.pointerEvents = "none";
+
     OWN_BOARD.appendChild(tr);
   });
 };
@@ -74,6 +74,8 @@ const renderRivalBoard = (rivalBoard, attackCb) => {
   changeBoards();
   const playBtn = document.getElementById("play-btn");
   playBtn.style.display = "none";
+  const dockBtn = document.getElementById("dockBtn");
+  dockBtn.disabled = true;
   const randomBtn = document.getElementById("randomise");
   randomBtn.disabled = true;
 };
@@ -94,6 +96,10 @@ const resetGame = (startGameCb) => {
   PLACEHOLDER_BOARD[disabledBoard].style.display = "flex";
   const playBtn = document.getElementById("play-btn");
   playBtn.style.display = "block";
+
+  const dockBtn = document.getElementById("dockBtn");
+  dockBtn.disabled = false;
+
   const randomBtn = document.getElementById("randomise");
   randomBtn.disabled = false;
   startGameCb();

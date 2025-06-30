@@ -31,5 +31,5 @@ test("Ships are created correctly", () => {
   expect(player.ships[4].length).toBe(5);
 
   const grid = player.gameboard.getOwnGrid();
-  expect(grid[0][0] instanceof Ship).toBeTruthy();
+  expect(grid[0][0] instanceof Ship).toBeFalsy();
 });

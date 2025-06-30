@@ -1,0 +1,16 @@
+.docked-ship {
+  padding-left: 3px;
+  background-color: #33333390;
+  color: white;
+  cursor: grab;
+  border: 2px solid #000;
+}
+
+.placed-ship {
+  position: absolute;
+  background-color: #444;
+  color: white;
+  text-align: center;
+  border: 1px solid white;
+  z-index: 10;
+}

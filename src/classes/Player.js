@@ -45,8 +45,12 @@ class Player {
     return [this.gameboard.getOwnGrid(), this.gameboard.getTrackingGrid()];
   }
 
+  rotateShip(ship) {
+    this.gameboard.rotateShip(ship);
+  }
+
   placeShip(coords, ship, orientation) {
-    this.gameboard.ownGrid.placeShip(coords, ship, orientation);
+    this.gameboard.placeShipManually(coords, ship, orientation);
   }
 
   receiveAttack(x, y) {

@@ -52,6 +52,34 @@ class Gameboard {
     return this.shipsSunk === 5;
   }
 
+  #checkOverlap(x, y, ship, orientation) {
+    let overlap = false;
+    for (let i = 0; i < ship.length; i++) {
+      const xCoord = orientation === 0 ? x + i : x;
+      const yCoord = orientation === 1 ? y + i : y;
+      const key = `${xCoord}-${yCoord}`;
+
+      if (this.shipsPlaced.has(key)) {
+        overlap = true;
+        break;
+      }
+    }
+    return overlap;
+  }
+
+  #checkOutOfBounds(x, y, ship, orientation) {
+    let isOutOfBounds = false;
+    for (let i = 0; i < ship.length; i++) {
+      const xCoord = orientation == 0 ? x + i : x;
+      const yCoord = orientation == 1 ? y + i : y;
+
+      if (xCoord < 0 || y < 0 || xCoord >= 10 || yCoord >= 10) {
+        isOutOfBounds = true;
+        break;
+      }
+    }
+    return isOutOfBounds;
+  }
   placeShipRandomly(ship) {
     const orientation = Math.floor(Math.random() * 2);
 
@@ -60,6 +88,7 @@ class Gameboard {
 
     let attempts = 0;
     while (attempts < 1000) {
+      attempts++;
       // Generate the coords randomly
       x = Math.floor(Math.random() * GRID_SIZE);
       y = Math.floor(Math.random() * GRID_SIZE);
@@ -70,19 +99,9 @@ class Gameboard {
       // Check if the ship can be placed in the grid without getting out of bounds
       if (endX >= 10 || endY >= 10) continue;
 
-      // Check if the boat doesnt overlap with another
+      // Check if the ship doesnt overlap with another
 
-      let overlap = false;
-      for (let i = 0; i < ship.length; i++) {
-        const xCoord = orientation === 0 ? x + i : x;
-        const yCoord = orientation === 1 ? y + i : y;
-        const key = `${xCoord}-${yCoord}`;
-
-        if (this.shipsPlaced.has(key)) {
-          overlap = true;
-          break;
-        }
-      }
+      let overlap = this.#checkOverlap(x, y, ship, orientation);
 
       if (overlap) continue;
       this.placeShip([x, y], ship, orientation);
@@ -91,9 +110,60 @@ class Gameboard {
     throw new Error(`Max. attemps reached to place the ships ${1000}`);
   }
 
+  placeShipManually(startingCoord, ship, orientation) {
+    let [x, y] = startingCoord;
+
+    const overlap = this.#checkOverlap(x, y, ship, orientation);
+
+    if (overlap)
+      throw new Error("This ship cannot be placed here. It overlaps!");
+
+    const isOutOfBounds = this.#checkOutOfBounds(x, y, ship, orientation);
+
+    if (isOutOfBounds) throw new Error("The ship will go out of bounds");
+
+    this.placeShip([x, y], ship, orientation);
+  }
+
+  #deleteShip(x, y) {
+    this.ownGrid[x][y] = null;
+  }
+
+  rotateShip(ship) {
+    if (!(ship instanceof Ship)) throw new Error("Invalid ship");
+
+    const positions = ship.getPositions();
+    if (!positions) throw new Error("This ship is not placed on board");
+
+    const [x, y] = positions[0];
+
+    const newOrientation = ship.getOrientation() === 1 ? 0 : 1;
+
+    const isOutOfBounds = this.#checkOutOfBounds(x, y, ship, newOrientation);
+
+    if (isOutOfBounds) throw new Error("The ship will go out of bounds");
+
+    positions.forEach(([x, y]) => {
+      this.#deleteShip(x, y);
+      this.shipsPlaced.delete(`${x}-${y}`);
+    });
+
+    const overlaps = this.#checkOverlap(x, y, ship, newOrientation);
+
+    if (overlaps) {
+      this.placeShipManually(positions[0], ship, ship.getOrientation());
+      ship.setPositions(positions);
+      this.shipsPlaced.add(`${x}-${y}`);
+
+      throw new Error("This ship cannot be placed here. It overlaps!");
+    }
+
+    this.placeShipManually([x, y], ship, newOrientation);
+    ship.toggleOrientation();
+  }
+
   placeShip(startingCoord, ship, orientation) {
     // Orientation: vertically -> 0, horizontally -> 1,
-    const board = this.getOwnGrid().map((row) => [...row]);
     let [x, y] = startingCoord;
 
     const endX = orientation === 0 ? x + ship.length - 1 : x;
@@ -107,12 +177,12 @@ class Gameboard {
     const shipPosition = [];
 
     for (let i = 0; i < ship.length; i++) {
-      const cellValue = board[x][y];
+      const cellValue = this.ownGrid[x][y];
 
       if (cellValue instanceof Ship && cellValue !== ship)
         throw new Error("Cannot place a ship on top of another!");
 
-      board[x][y] = ship;
+      this.ownGrid[x][y] = ship;
       shipPosition.push([x, y]);
       this.shipsPlaced.add(`${x}-${y}`);
 
@@ -121,7 +191,6 @@ class Gameboard {
     }
 
     ship.setPositions(shipPosition);
-    this.ownGrid = board;
   }
 
   receiveAttack(x, y) {
